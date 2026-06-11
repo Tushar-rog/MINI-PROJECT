@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sports Mall Pro</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    overflow-x: hidden;
+}
+
+.navbar {
+    background: linear-gradient(90deg, #111, #333);
+    color: white;
+    padding: 18px;
+    text-align: center;
+    font-size: 26px;
+    animation: slideDown 0.8s ease;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    padding: 30px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    animation: fadeUp 0.8s ease forwards;
+    opacity: 0;
+}
+
+.card:hover {
+    transform: translateY(-12px) scale(1.04);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.card:hover img {
+    transform: scale(1.1);
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.price {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+button {
+    background: linear-gradient(90deg, #ff512f, #dd2476);
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    background: rgba(0,0,0,0.7);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    width: 380px;
+    border-radius: 12px;
+    text-align: center;
+    animation: pop 0.4s ease;
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+    font-size: 22px;
+}
+
+.main-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.thumb-container {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.thumb:hover {
+    border: 2px solid #ff512f;
+    transform: scale(1.1);
+}
+
+@keyframes fadeUp {
+    from {opacity:0; transform: translateY(30px);}
+    to {opacity:1; transform: translateY(0);}
+}
+
+@keyframes slideDown {
+    from {transform: translateY(-50px); opacity:0;}
+    to {transform: translateY(0); opacity:1;}
+}
+
+@keyframes pop {
+    from {transform: scale(0.7); opacity:0;}
+    to {transform: scale(1); opacity:1;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar"> Sports Shopping Mall </div>
+
+<div class="container" id="products"></div>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="mainImg" class="main-img">
+        <div id="thumbs" class="thumb-container"></div>
+        <h2 id="title"></h2>
+        <p id="desc"></p>
+        <p class="price" id="price"></p>
+        <button onclick="addToCart()">Add to Cart</button>
+    </div>
+</div>
+<!-- ✅ FOOTER (Contact Us Added) -->
+<footer class="footer">
+    <h2>Contact Us</h2>
+    <p>📍 Location: Vishakapatnam, India</p>
+    <p>📞 Phone: +91 98765 43210</p>
+    <p>📧 Email: <a href="mailto:sports@gmail.com">sports@gmail.com</a></p>
+    <p>© 2026 Sports Mall  | All Rights Reserved</p>
+</footer>
+
+
+<script>
+const products = [
+    {name:"Football",price:"₹999",desc:"Elevate your game with top-tier football gear designed for performance and passion",images:["https://5.imimg.com/data5/SELLER/Default/2021/8/BE/XM/KA/9058559/sports-football.jpg","https://upload.wikimedia.org/wikipedia/commons/1/1d/Football_Pallo_valmiina-cropped.jpg","https://cdn.britannica.com/87/151887-050-BE5CB604/football.jpg"]},
+    {name:"Cricket Bat",price:"₹1999",desc:" specialized equipment consisting of a willow-wood blade and a cane handle, with maximum legal dimensions of 38 inches (96.5 cm) in length and 4.25 inches (10.8 cm) in width",images:["https://scssports.in/cdn/shop/files/WhatsAppImage2025-12-24at5.56.09PM_ce569651-2534-493d-a645-ba61d2a1612a.jpg?v=1766579860&width=1024","https://zoomcricket.in/wp-content/uploads/2025/04/WhatsApp-Image-2025-03-30-at-5.03.41-PM.jpeg","https://cdnmedia.dsc-cricket.com/media/catalog/product/cache/5b0ea239e50527b43e3253a7f103e237/d/s/dsc-blak-65-supreme-english-willow-india-range-cricket-bat-2.webp"]},
+    {name:"Running Shoes",price:"₹2499",desc:"Comfort shoes",images:["https://images.skechers.com/image;width=1120,format=auto/246200_GYLM_HERO_LG","https://images.skechers.com/image;width=1120,format=auto/246220_RYMT_PROFILE_01","https://cultstore.com/cdn/shop/files/vzC6KzxUrPC5U2rvcfck1qfe.jpg?v=1726208444&width=2250"]},
+    {name:"Basketball",price:"₹799",desc:"Indoor & outdoor ball",images:["https://images.unsplash.com/photo-1519861531473-9200262188bf","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkldW0a_S_W6SmYoSRaV-S2YW4NrQ3cLbwHg&s","https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Basketball.png/250px-Basketball.png"]},
+    {name:"Tennis Racket",price:"₹1499",desc:"Lightweight racket",images:["https://scssports.in/cdn/shop/files/Burn_Pro_PS13_Badminton_Racket_68f89fc7-0c83-4181-863b-8e68d856abdf.jpg?v=1735303052&width=1200","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzS6NDvXoyt0Fsca5ctY85xw3MghqMx0XBTQ&s","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGHTBdDWBMvqpUkvwoxV2yidZskS7pwl7KMg&s"]},
+    {name:"Gym Dumbbells",price:"₹1299",desc:"Fitness dumbbells",images:["https://2.wlimg.com/product_images/bc-full/2023/9/10418832/gym-dumbbell-1687765392-6952878.jpeg","https://m.media-amazon.com/images/I/710SxepIfiL.jpg","https://m.media-amazon.com/images/I/41nmyNTwjNL._AC_UF894,1000_QL80_.jpg"]},
+    {name:"Skipping Rope",price:"₹299",desc:"Speed rope training",images:["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo5JA5Y_9ZQyiMOVqjfRWwIoY-Z_r1NlTTSA&s","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGwRLvmN6IubJ5AUY8SQvg6KdW9VkjBK2lrw&s","https://grassrootsecostore.com.au/cdn/shop/files/mader-skipping-rope-blue_1080x.jpg?v=1733476398"]},
+    {name:"Sports T-Shirt",price:"₹599",desc:"Breathable fabric",images:["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaZFYcZu-T1UO_zjcVzxOqrzPzO08oK_8FKw&s","https://image.made-in-china.com/202f0j00CAKkdBsIUqbm/Custom-New-Design-Sublimation-Sport-T-Shirts-Cricket-Shirts-with-Polo-Collar.webp","https://5.imimg.com/data5/YK/HC/HN/SELLER-1756364/sublimated-t-shirts-250x250.jpg"]},
+    {name:"Goalkeeper Gloves",price:"₹899",desc:"Grip gloves for football",images:["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJTvWvpGoynlYpTQNJRJYERdFWoHTwexy-bA&s","https://img.mirusports.com/images/products/nivia/13d79361/default/l/1673440574881.jpeg","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWsR_oVlgvAvcb2CJY8UgMZ9zz1GxrRznoyw&s"]},
+    {name:"Sports Cap",price:"₹399",desc:"Stylish cap",images:["https://d1pdzcnm6xgxlz.cloudfront.net/fashionaccesories/PM010211-9.jpg","https://d1pdzcnm6xgxlz.cloudfront.net/fashionaccesories/PM010211-17.jpg","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2BaLxS2-E7NmWAkXSDl5WcO-lBFyOMQH7wQ&s"]}
+];
+
+const container = document.getElementById("products");
+
+products.forEach((p, index) => {
+    container.innerHTML += `
+    <div class="card" style="animation-delay:${index*0.1}s" onclick="showDetails(${index})">
+        <img src="${p.images[0]}">
+        <div class="card-body">
+            <h3>${p.name}</h3>
+            <p class="price">${p.price}</p>
+        </div>
+    </div>`;
+
+});
+function showDetails(index) {
+    const p = products[index];
+    document.getElementById("title").innerText = p.name;
+    document.getElementById("desc").innerText = p.desc;
+    document.getElementById("price").innerText = p.price;
+    document.getElementById("mainImg").src = p.images[0];
+
+    const thumbs = document.getElementById("thumbs");
+    thumbs.innerHTML = "";
+
+    p.images.forEach(img => {
+        thumbs.innerHTML += `<img src='${img}' class='thumb' onclick="changeImage('${img}')">`;
+    });
+
+    document.getElementById("modal").style.display = "flex";
+}
+
+function changeImage(src){
+    document.getElementById("mainImg").src = src;
+}
+
+function closeModal(){
+    document.getElementById("modal").style.display = "none";
+}
+
+function addToCart(){
+    alert("Added to cart 🛒");
+}
+
+</script>
+
+</body>
+</html>
